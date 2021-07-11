@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Follows", type: :request do
-  let!(:user_id) { FactoryBot.create(:user).id }
+  let(:user) { FactoryBot.create(:user) }
+  let!(:user_id) { user.id }
   let!(:followee_id) { FactoryBot.create(:user).id }
 
   context "POST /follows" do
@@ -61,6 +62,37 @@ RSpec.describe "Follows", type: :request do
         expect(result["error_message"]).to eq("Record Not Found")
         expect(response).to have_http_status(:not_found)
       end
+    end
+  end
+
+  context "GET /follows/sleep_records" do
+    it "returns ok" do
+      sleep_at = Time.current.last_week.to_i
+      record1 = FactoryBot.create(:sleep_record, sleep_at: sleep_at, wakeup_at: sleep_at + 8.hours.to_i)
+      record2 = FactoryBot.create(:sleep_record, sleep_at: sleep_at, wakeup_at: sleep_at + 7.hours.to_i)
+      FactoryBot.create(:follow, user: user, followee: record1.user)
+      FactoryBot.create(:follow, user: user, followee: record2.user)
+
+      get sleep_records_follows_path(user_id: user_id)
+
+      result = JSON.parse(response.body)
+
+      expect(response).to be_ok
+      expect(result).to eq(
+        {
+          "data" => [record2, record1].map do |record|
+            {
+              "id" => record.id.to_s,
+              "type" => "sleep_record",
+              "attributes" => {
+                "sleep_at" => record.sleep_at,
+                "wakeup_at" => record.wakeup_at,
+                "duration" => record.duration
+              }
+            }
+          end
+        }
+      )
     end
   end
 end

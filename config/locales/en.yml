@@ -30,4 +30,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  active_interaction:
+    errors:
+      models:
+        sleep_records/wakeup:
+          attributes:
+            user:
+              unfound_sleep_record: "unable find valid sleep record"
