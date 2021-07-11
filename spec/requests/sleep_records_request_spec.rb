@@ -96,4 +96,35 @@ RSpec.describe "SleepRecords", type: :request do
       end
     end
   end
+
+  context "GET /sleep_records/followee_last_week" do
+    it "returns ok" do
+      sleep_at = Time.current.last_week.to_i
+      record1 = FactoryBot.create(:sleep_record, sleep_at: sleep_at, wakeup_at: sleep_at + 8.hours.to_i)
+      record2 = FactoryBot.create(:sleep_record, sleep_at: sleep_at, wakeup_at: sleep_at + 7.hours.to_i)
+      FactoryBot.create(:follow, user: user, followee: record1.user)
+      FactoryBot.create(:follow, user: user, followee: record2.user)
+
+      get followee_last_week_sleep_records_path(user_id: user.id)
+
+      result = JSON.parse(response.body)
+
+      expect(response).to be_ok
+      expect(result).to eq(
+        {
+          "data" => [record2, record1].map do |record|
+            {
+              "id" => record.id.to_s,
+              "type" => "sleep_record",
+              "attributes" => {
+                "sleep_at" => record.sleep_at,
+                "wakeup_at" => record.wakeup_at,
+                "duration" => record.duration
+              }
+            }
+          end
+        }
+      )
+    end
+  end
 end

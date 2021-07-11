@@ -21,10 +21,4 @@ class FollowsController < ApplicationController
       head :unprocessable_entity
     end
   end
-
-  def sleep_records
-    records = SleepRecords::FolloweeLastWeekRecords.run!(user: current_user)
-
-    render json: SleepRecordSerializer.new(records)
-  end
 end

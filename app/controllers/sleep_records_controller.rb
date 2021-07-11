@@ -24,4 +24,10 @@ class SleepRecordsController < ApplicationController
       render json: { error_message: outcome.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
   end
+
+  def followee_last_week
+    records = SleepRecords::FolloweeLastWeekRecords.run!(user: current_user)
+
+    render json: SleepRecordSerializer.new(records)
+  end
 end
