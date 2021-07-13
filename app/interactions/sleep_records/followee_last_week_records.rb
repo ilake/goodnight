@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SleepRecords::FolloweeLastWeekRecords < ActiveInteraction::Base
   object :user
 

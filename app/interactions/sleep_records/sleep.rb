@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SleepRecords::Sleep < ActiveInteraction::Base
   object :user
 

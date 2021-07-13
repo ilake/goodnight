@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SleepRecord < ApplicationRecord
   validates :sleep_at, presence: true
   validate :validate_wakeup_at

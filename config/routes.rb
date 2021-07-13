@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   resources :follows, only: %i[create destroy]
   resources :sleep_records, only: %[index] do

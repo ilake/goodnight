@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Follows::Create < ActiveInteraction::Base
   object :user
   object :followee, class: User

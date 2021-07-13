@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SleepRecordsController < ApplicationController
   def index
     sleep_records = current_user.sleep_records.order(:created_at)
